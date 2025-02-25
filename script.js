@@ -14,7 +14,6 @@ const bookTableBody = document
   .getElementsByTagName("tbody")[0];
 const genreFilter = document.getElementById("genre-filter");
 
-// Call loadBooks whenever the filter changes.
 genreFilter.addEventListener("change", loadBooks);
 
 bookForm.addEventListener("submit", async (e) => {
@@ -41,7 +40,6 @@ bookForm.addEventListener("submit", async (e) => {
 });
 
 async function loadBooks() {
-  // Store the currently selected filter so we can restore it later.
   const selectedGenre = genreFilter.value;
   bookTableBody.innerHTML = "";
   const genresSet = new Set();
@@ -50,10 +48,8 @@ async function loadBooks() {
     const querySnapshot = await getDocs(collection(db, "books"));
     querySnapshot.forEach((docSnapshot) => {
       const book = docSnapshot.data();
-      // Add each book's genre to the Set
       genresSet.add(book.genre);
 
-      // If a filter is selected and this book's genre doesn't match, skip it.
       if (selectedGenre && book.genre !== selectedGenre) {
         return;
       }
@@ -61,32 +57,26 @@ async function loadBooks() {
       const docRef = docSnapshot.ref;
       const row = document.createElement("tr");
 
-      // Title cell
       const titleCell = document.createElement("td");
       titleCell.textContent = book.title;
       row.appendChild(titleCell);
 
-      // Author cell
       const authorCell = document.createElement("td");
       authorCell.textContent = book.author;
       row.appendChild(authorCell);
 
-      // Genre cell
       const genreCell = document.createElement("td");
       genreCell.textContent = book.genre;
       row.appendChild(genreCell);
 
-      // Rating cell
       const ratingCell = document.createElement("td");
       ratingCell.textContent = book.rating;
       row.appendChild(ratingCell);
 
-      // Actions cell
       const actionsCell = document.createElement("td");
 
-      // Edit button
       const editButton = document.createElement("button");
-      editButton.textContent = "Edit";
+      editButton.innerHTML = '<i class="fas fa-edit"></i>';
       editButton.onclick = () => {
         // Replace cells with input fields for editing
         const titleInput = document.createElement("input");
@@ -151,9 +141,8 @@ async function loadBooks() {
       };
       actionsCell.appendChild(editButton);
 
-      // Delete button
       const deleteButton = document.createElement("button");
-      deleteButton.textContent = "Delete";
+      deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
       deleteButton.onclick = async () => {
         try {
           await deleteDoc(docRef);
@@ -169,14 +158,12 @@ async function loadBooks() {
       bookTableBody.appendChild(row);
     });
 
-    // Update the genre filter dropdown with all unique genres.
     genreFilter.innerHTML = "";
     const allOption = document.createElement("option");
     allOption.value = "";
     allOption.textContent = "All Genres";
     genreFilter.appendChild(allOption);
 
-    // Sort genres alphabetically before adding to the dropdown.
     Array.from(genresSet)
       .sort()
       .forEach((genre) => {
@@ -186,7 +173,6 @@ async function loadBooks() {
         genreFilter.appendChild(option);
       });
 
-    // Restore the previously selected filter.
     genreFilter.value = selectedGenre;
   } catch (error) {
     console.error("Error loading books: ", error);
