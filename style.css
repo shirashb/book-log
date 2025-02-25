@@ -137,6 +137,36 @@ li:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+#book-list {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+#book-list th,
+#book-list td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+#book-list th {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+#book-list tr:nth-child(even) {
+  background-color: #f9f9f9; /* Light gray for even rows */
+}
+
+#book-list tr:hover {
+  background-color: #f1f1f1; /* Highlight row on hover */
+}
+
+button {
+  margin-right: 5px; /* Space between buttons */
+}
+
 footer {
   background: var(--primary-color);
   color: var(--white);
