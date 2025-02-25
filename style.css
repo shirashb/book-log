@@ -84,7 +84,8 @@ form {
   align-items: center;
 }
 
-input {
+input,
+select {
   width: 100%;
   padding: 12px;
   margin: 8px 0;
@@ -94,7 +95,8 @@ input {
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-input:focus {
+input:focus,
+select:focus {
   border-color: var(--secondary-color);
   box-shadow: 0 0 8px rgba(178, 13, 48, 0.3);
   outline: none;
@@ -162,10 +164,6 @@ li:hover {
   background-color: #f1f1f1;
 }
 
-button {
-  margin-right: 5px;
-}
-
 footer {
   background: var(--primary-color);
   color: var(--white);
@@ -180,7 +178,8 @@ footer {
     padding: 20px;
   }
 
-  input {
+  input,
+  select {
     max-width: 100%;
   }
 
