@@ -1,8 +1,8 @@
 :root {
-  --primary-color: #734330; /* Warm, earthy tone */
-  --secondary-color: #b20d30; /* Rich red accent */
-  --background-color: #f4f4f4; /* Light background */
-  --text-color: #333; /* Dark text */
+  --primary-color: #734330;
+  --secondary-color: #b20d30;
+  --background-color: #f4f4f4;
+  --text-color: #333;
   --white: #ffffff;
   --light-gray: #eaeaea;
 }
@@ -63,7 +63,6 @@ h2 {
   color: var(--secondary-color);
   margin-bottom: 15px;
   padding-bottom: 5px;
-  /* Underline removed as per your request */
 }
 
 .form-group {
@@ -156,15 +155,15 @@ li:hover {
 }
 
 #book-list tr:nth-child(even) {
-  background-color: #f9f9f9; /* Light gray for even rows */
+  background-color: #f9f9f9;
 }
 
 #book-list tr:hover {
-  background-color: #f1f1f1; /* Highlight row on hover */
+  background-color: #f1f1f1;
 }
 
 button {
-  margin-right: 5px; /* Space between buttons */
+  margin-right: 5px;
 }
 
 footer {

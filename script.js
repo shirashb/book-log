@@ -8,14 +8,11 @@ import {
   doc,
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-// Get references to the form and the table body
 const bookForm = document.getElementById("book-form");
 const bookTableBody = document
   .getElementById("book-list")
   .getElementsByTagName("tbody")[0];
 
-// We no longer use the form for editing in this version.
-// The form remains available for adding new books.
 bookForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -25,7 +22,6 @@ bookForm.addEventListener("submit", async (e) => {
   const rating = document.getElementById("rating").value;
 
   try {
-    // Add a new document to the "books" collection
     await addDoc(collection(db, "books"), {
       title,
       author,
@@ -41,16 +37,14 @@ bookForm.addEventListener("submit", async (e) => {
 });
 
 async function loadBooks() {
-  // Clear the current table body
   bookTableBody.innerHTML = "";
   try {
     const querySnapshot = await getDocs(collection(db, "books"));
     querySnapshot.forEach((docSnapshot) => {
       const book = docSnapshot.data();
-      const docRef = docSnapshot.ref; // Get the document reference
+      const docRef = docSnapshot.ref;
       const row = document.createElement("tr");
 
-      // Create cells for each field
       const titleCell = document.createElement("td");
       titleCell.textContent = book.title;
       row.appendChild(titleCell);
@@ -67,14 +61,11 @@ async function loadBooks() {
       ratingCell.textContent = book.rating;
       row.appendChild(ratingCell);
 
-      // Create the Actions cell
       const actionsCell = document.createElement("td");
 
-      // Create the Edit button
       const editButton = document.createElement("button");
       editButton.textContent = "Edit";
       editButton.onclick = () => {
-        // Replace cell contents with input fields for inline editing
         const titleInput = document.createElement("input");
         titleInput.type = "text";
         titleInput.value = titleCell.textContent;
@@ -101,7 +92,6 @@ async function loadBooks() {
         ratingCell.innerHTML = "";
         ratingCell.appendChild(ratingInput);
 
-        // Replace the Edit button with Save and Cancel buttons
         actionsCell.innerHTML = "";
 
         const saveButton = document.createElement("button");
@@ -120,7 +110,7 @@ async function loadBooks() {
               rating: newRating,
             });
             alert("Book updated successfully!");
-            loadBooks(); // Reload the table to reflect changes
+            loadBooks();
           } catch (error) {
             console.error("Error updating book: ", error);
           }
@@ -129,7 +119,6 @@ async function loadBooks() {
         const cancelButton = document.createElement("button");
         cancelButton.textContent = "Cancel";
         cancelButton.onclick = () => {
-          // Reload the books to revert changes
           loadBooks();
         };
 
@@ -139,7 +128,6 @@ async function loadBooks() {
 
       actionsCell.appendChild(editButton);
 
-      // Create the Delete button
       const deleteButton = document.createElement("button");
       deleteButton.textContent = "Delete";
       deleteButton.onclick = async () => {
@@ -162,5 +150,4 @@ async function loadBooks() {
   }
 }
 
-// Initial load of books
 loadBooks();
