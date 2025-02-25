@@ -1,6 +1,9 @@
 const sendButton = document.getElementById("send-button");
 const userInput = document.getElementById("user-input");
 const messagesDiv = document.getElementById("messages");
+const closeChatbot = document.getElementById("close-chatbot");
+const chatbot = document.getElementById("chatbot");
+const showChatbotButton = document.getElementById("show-chatbot");
 
 const API_KEY =
   "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";
@@ -46,6 +49,23 @@ function appendMessage(sender, message) {
   messageDiv.textContent = `${sender}: ${message}`;
   messagesDiv.appendChild(messageDiv);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
   return messageDiv;
 }
+
+const chatbotHeader = document.getElementById("chatbot-header");
+chatbotHeader.addEventListener("click", (e) => {
+  if (e.target === closeChatbot) return;
+  const chatWindow = document.getElementById("chat-window");
+  chatWindow.style.display =
+    chatWindow.style.display === "none" ? "flex" : "none";
+});
+
+closeChatbot.addEventListener("click", () => {
+  chatbot.style.display = "none";
+  showChatbotButton.style.display = "block";
+});
+
+showChatbotButton.addEventListener("click", () => {
+  chatbot.style.display = "flex";
+  showChatbotButton.style.display = "none";
+});

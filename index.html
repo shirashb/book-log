@@ -72,19 +72,30 @@
                 </table>
             </section>
 
+            <!-- Chatbot Widget (Fixed at Bottom Right) -->
             <section id="chatbot">
-                <h2>Chat with Us!</h2>
+                <div id="chatbot-header">
+                    Chat with Us!
+                    <span id="close-chatbot" class="close-btn">&times;</span>
+                </div>
                 <div id="chat-window">
                     <div id="messages"></div>
-                    <input type="text" id="user-input" placeholder="Type your message..." />
-                    <button id="send-button">Send</button>
+                    <div class="chat-input">
+                        <input type="text" id="user-input" placeholder="Type your message..." />
+                        <button id="send-button">Send</button>
+                    </div>
                 </div>
             </section>
-        </main>
 
-        <footer>
-            <p>&copy; 2023 Book Log App</p>
-        </footer>
+            <button id="show-chatbot" class="chatbot-toggle" style="display: none;">Chat</button>
+
+    </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Book Log App</p>
+    </footer>
     </div>
 
     <script type="module" src="firebaseConfig.js"></script>
