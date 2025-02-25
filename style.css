@@ -164,6 +164,42 @@ li:hover {
   background-color: #f1f1f1;
 }
 
+#chatbot {
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 15px;
+  background-color: var(--white);
+  margin-top: 20px;
+}
+
+#chat-window {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+#messages {
+  margin-bottom: 10px;
+}
+
+#user-input {
+  width: calc(100% - 100px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#send-button {
+  padding: 10px;
+  border: none;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 footer {
   background: var(--primary-color);
   color: var(--white);
