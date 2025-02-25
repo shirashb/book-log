@@ -52,7 +52,6 @@
                     <label for="genre-filter">Filter by Genre:</label>
                     <select id="genre-filter">
                         <option value="">All Genres</option>
-                        <!-- Options will be populated dynamically -->
                     </select>
                 </div>
                 <table id="book-list">
@@ -67,12 +66,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Book entries will be dynamically added here -->
                     </tbody>
                 </table>
             </section>
 
-            <!-- Chatbot Widget (Fixed at Bottom Right) -->
             <section id="chatbot">
                 <div id="chatbot-header">
                     Chat with Us!
@@ -90,19 +87,18 @@
             <button id="show-chatbot" class="chatbot-toggle" style="display: none;">
                 <i class="fas fa-comments"></i>
             </button>
+        </main>
 
-    </div>
-
-    </main>
-
-    <footer>
-        <p>&copy; 2023 Book Log App</p>
-    </footer>
+        <footer>
+            <p>&copy; 2023 Book Log App</p>
+        </footer>
     </div>
 
     <script type="module" src="firebaseConfig.js"></script>
     <script type="module" src="script.js"></script>
     <script type="module" src="chatbot.js"></script>
+    <script type="module" src="biometric.js"></script>
+
 </body>
 
 </html>
