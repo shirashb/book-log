@@ -23,6 +23,7 @@ bookForm.addEventListener("submit", async (e) => {
   const author = document.getElementById("author").value;
   const genre = document.getElementById("genre").value;
   const rating = document.getElementById("rating").value;
+  const status = document.getElementById("status").value; // Get status value
 
   try {
     await addDoc(collection(db, "books"), {
@@ -30,6 +31,7 @@ bookForm.addEventListener("submit", async (e) => {
       author,
       genre,
       rating,
+      status, // Include status in the document
     });
     alert("Book added successfully!");
     bookForm.reset();
@@ -73,6 +75,10 @@ async function loadBooks() {
       ratingCell.textContent = book.rating;
       row.appendChild(ratingCell);
 
+      const statusCell = document.createElement("td"); // Create a cell for status
+      statusCell.textContent = book.status; // Display the status
+      row.appendChild(statusCell);
+
       const actionsCell = document.createElement("td");
 
       const editButton = document.createElement("button");
@@ -105,6 +111,20 @@ async function loadBooks() {
         ratingCell.innerHTML = "";
         ratingCell.appendChild(ratingInput);
 
+        const statusInput = document.createElement("select"); // Create a select for status
+        const statuses = ["Not Started", "Reading", "Completed"];
+        statuses.forEach((status) => {
+          const option = document.createElement("option");
+          option.value = status;
+          option.textContent = status;
+          if (status === book.status) {
+            option.selected = true; // Set the current status as selected
+          }
+          statusInput.appendChild(option);
+        });
+        statusCell.innerHTML = "";
+        statusCell.appendChild(statusInput);
+
         // Clear current actions and add Save and Cancel
         actionsCell.innerHTML = "";
 
@@ -115,6 +135,7 @@ async function loadBooks() {
           const newAuthor = authorInput.value;
           const newGenre = genreInput.value;
           const newRating = ratingInput.value;
+          const newStatus = statusInput.value; // Get the new status
 
           try {
             await updateDoc(docRef, {
@@ -122,6 +143,7 @@ async function loadBooks() {
               author: newAuthor,
               genre: newGenre,
               rating: newRating,
+              status: newStatus, // Update the status
             });
             alert("Book updated successfully!");
             loadBooks();

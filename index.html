@@ -36,6 +36,12 @@
                         <label for="rating">Rating (1-5)</label>
                         <input type="number" id="rating" placeholder="Enter Rating" min="1" max="5" required>
                     </div>
+                    <label for="status">Status:</label>
+                    <select id="status">
+                        <option value="Not Started">Not Started</option>
+                        <option value="Reading">Reading</option>
+                        <option value="Completed">Completed</option>
+                    </select>
                     <button type="submit">Add Book</button>
                 </form>
             </section>
@@ -56,6 +62,7 @@
                             <th>Author</th>
                             <th>Genre</th>
                             <th>Rating</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
