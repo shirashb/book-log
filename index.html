@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+    <title>Book Log</title>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Book Log</h1>
+        </header>
+
+        <main>
+            <section id="add-book">
+                <h2>Add a New Book</h2>
+                <form id="book-form">
+                    <div class="form-group">
+                        <label for="title">Book Title</label>
+                        <input type="text" id="title" placeholder="Enter Book Title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Author</label>
+                        <input type="text" id="author" placeholder="Enter Author" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="genre">Genre</label>
+                        <input type="text" id="genre" placeholder="Enter Genre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rating">Rating (1-5)</label>
+                        <input type="number" id="rating" placeholder="Enter Rating" min="1" max="5" required>
+                    </div>
+                    <button type="submit">Add Book</button>
+                </form>
+            </section>
+
+            <section id="book-list-section">
+                <h2>Your Books</h2>
+                <ul id="book-list"></ul>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2023 Book Log App</p>
+        </footer>
+    </div>
+
+    <script type="module" src="firebaseConfig.js"></script>
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>
