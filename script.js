@@ -1,4 +1,4 @@
-import { db, auth } from "./firebaseConfig.js";
+import { db } from "./firebaseConfig.js";
 import {
   collection,
   addDoc,
@@ -23,14 +23,10 @@ bookForm.addEventListener("submit", async (e) => {
   const author = document.getElementById("author").value;
   const genre = document.getElementById("genre").value;
   const rating = document.getElementById("rating").value;
-  const status = document.getElementById("status").value;
+  const status = document.getElementById("status").value; // Get status value
 
   try {
-    // Assuming you have a way to get the current user's ID
-    const userId = "currentUser Id"; // Replace with actual user ID
-
     await addDoc(collection(db, "books"), {
-      userId: userId, // Add userId to associate the book with the user
       title,
       author,
       genre,
@@ -54,8 +50,6 @@ async function loadBooks() {
     const querySnapshot = await getDocs(collection(db, "books"));
     querySnapshot.forEach((docSnapshot) => {
       const book = docSnapshot.data();
-      if (book.userId !== "currentUser Id") return; // Only load books for the current user
-
       genresSet.add(book.genre);
 
       if (selectedGenre && book.genre !== selectedGenre) {
@@ -86,6 +80,87 @@ async function loadBooks() {
       row.appendChild(statusCell);
 
       const actionsCell = document.createElement("td");
+
+      const editButton = document.createElement("button");
+      editButton.innerHTML = '<i class="fas fa-edit"></i>';
+      editButton.onclick = () => {
+        const titleInput = document.createElement("input");
+        titleInput.type = "text";
+        titleInput.value = titleCell.textContent;
+        titleCell.innerHTML = "";
+        titleCell.appendChild(titleInput);
+
+        const authorInput = document.createElement("input");
+        authorInput.type = "text";
+        authorInput.value = authorCell.textContent;
+        authorCell.innerHTML = "";
+        authorCell.appendChild(authorInput);
+
+        const genreInput = document.createElement("input");
+        genreInput.type = "text";
+        genreInput.value = genreCell.textContent;
+        genreCell.innerHTML = "";
+        genreCell.appendChild(genreInput);
+
+        const ratingInput = document.createElement("input");
+        ratingInput.type = "number";
+        ratingInput.value = ratingCell.textContent;
+        ratingInput.min = 1;
+        ratingInput.max = 5;
+        ratingCell.innerHTML = "";
+        ratingCell.appendChild(ratingInput);
+
+        const statusInput = document.createElement("select");
+        const statuses = ["Not Started", "Reading", "Completed"];
+        statuses.forEach((status) => {
+          const option = document.createElement("option");
+          option.value = status;
+          option.textContent = status;
+          if (status === book.status) {
+            option.selected = true;
+          }
+          statusInput.appendChild(option);
+        });
+        statusCell.innerHTML = "";
+        statusCell.appendChild(statusInput);
+
+        actionsCell.innerHTML = "";
+
+        const saveButton = document.createElement("button");
+        saveButton.textContent = "Save";
+        saveButton.onclick = async () => {
+          const newTitle = titleInput.value;
+          const newAuthor = authorInput.value;
+          const newGenre = genreInput.value;
+          const newRating = ratingInput.value;
+          const newStatus = statusInput.value;
+
+          try {
+            await updateDoc(docRef, {
+              title: newTitle,
+              author: newAuthor,
+              genre: newGenre,
+              rating: newRating,
+              status: newStatus,
+            });
+            alert("Book updated successfully!");
+            loadBooks();
+          } catch (error) {
+            console.error("Error updating book: ", error);
+          }
+        };
+
+        const cancelButton = document.createElement("button");
+        cancelButton.textContent = "Cancel";
+        cancelButton.onclick = () => {
+          loadBooks();
+        };
+
+        actionsCell.appendChild(saveButton);
+        actionsCell.appendChild(cancelButton);
+      };
+      actionsCell.appendChild(editButton);
+
       const deleteButton = document.createElement("button");
       deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
       deleteButton.onclick = async () => {
@@ -98,6 +173,7 @@ async function loadBooks() {
         }
       };
       actionsCell.appendChild(deleteButton);
+
       row.appendChild(actionsCell);
       bookTableBody.appendChild(row);
     });
