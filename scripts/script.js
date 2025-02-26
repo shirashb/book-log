@@ -161,6 +161,19 @@ async function loadBooks() {
 
         actionsCell.appendChild(saveButton);
         actionsCell.appendChild(cancelButton);
+
+        // Add keydown listener for "Enter" key to trigger saveButton
+        titleInput.addEventListener("keydown", handleEnterKey);
+        authorInput.addEventListener("keydown", handleEnterKey);
+        genreInput.addEventListener("keydown", handleEnterKey);
+        ratingInput.addEventListener("keydown", handleEnterKey);
+        statusInput.addEventListener("keydown", handleEnterKey);
+
+        function handleEnterKey(event) {
+          if (event.key === "Enter") {
+            saveButton.click();
+          }
+        }
       };
       actionsCell.appendChild(editButton);
 
