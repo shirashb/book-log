@@ -15,8 +15,8 @@
         <header>
             <h1>Book Log</h1>
             <div class="header-buttons">
-                <button id="register-button">Register with Biometrics</button>
-                <button id="login-button">Login with Biometrics</button>
+                <button id="register-button" aria-label="Register">Register with Biometrics</button>
+                <button id="login-button" aria-label="Login">Login with Biometrics</button>
             </div>
         </header>
 
@@ -26,7 +26,8 @@
                 <form id="book-form">
                     <div class="form-group">
                         <label for="title">Book Title</label>
-                        <input type="text" id="title" placeholder="Enter Book Title" required>
+                        <input type="text" id="title" placeholder="Enter Book Title" aria-label="Enter Book Title"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="author">Author</label>
@@ -82,8 +83,9 @@
                 <div id="chat-window">
                     <div id="messages"></div>
                     <div class="chat-input">
-                        <input type="text" id="user-input" placeholder="Type your message..." />
-                        <button id="send-button">Send</button>
+                        <input type="text" id="user-input" placeholder="Type your message..."
+                            aria-label="Type your message here" />
+                        <button id="send-button" aria-label="Send Button">Send</button>
                     </div>
                 </div>
             </section>
