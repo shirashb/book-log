@@ -127,7 +127,7 @@ async function loadBooks() {
         actionsCell.innerHTML = "";
 
         const saveButton = document.createElement("button");
-        saveButton.textContent = "Save";
+        saveButton.innerHTML = '<i class="fa-regular fa-pen-to-square"></i>';
         saveButton.onclick = async () => {
           const newTitle = titleInput.value;
           const newAuthor = authorInput.value;
@@ -151,7 +151,7 @@ async function loadBooks() {
         };
 
         const cancelButton = document.createElement("button");
-        cancelButton.textContent = "Cancel";
+        cancelButton.innerHTML = '<i class="fa-solid fa-ban"></i>';
         cancelButton.onclick = () => {
           loadBooks();
         };
