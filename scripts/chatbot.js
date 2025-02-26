@@ -74,3 +74,8 @@ document.addEventListener("DOMContentLoaded", function () {
       chatWindow.style.display === "none" ? "block" : "none";
   });
 });
+sendButton.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    sendButton.click();
+  }
+});

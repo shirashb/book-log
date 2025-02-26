@@ -75,13 +75,15 @@
                 </table>
             </section>
 
-            <section id="chatbot">
-                <div id="chatbot-header">
+            <!-- Add role and aria attributes for better accessibility -->
+            <section id="chatbot" role="dialog" aria-labelledby="chatbot-header" aria-hidden="true">
+                <div id="chatbot-header" tabindex="0"> <!-- Make header focusable -->
                     Chat with Us!
-                    <span id="close-chatbot" class="close-btn">&times;</span>
+                    <span id="close-chatbot" class="close-btn" role="button" tabindex="0"
+                        aria-label="Close Chatbot">&times;</span>
                 </div>
-                <div id="chat-window">
-                    <div id="messages"></div>
+                <div id="chat-window" role="region" aria-live="polite">
+                    <div id="messages" tabindex="0"></div>
                     <div class="chat-input">
                         <input type="text" id="user-input" placeholder="Type your message..."
                             aria-label="Type your message here" />
