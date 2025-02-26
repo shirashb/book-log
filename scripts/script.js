@@ -83,6 +83,7 @@ async function loadBooks() {
 
       const editButton = document.createElement("button");
       editButton.innerHTML = '<i class="fas fa-edit"></i>';
+      editButton.setAttribute("aria-label", "Edit book details");
       editButton.onclick = () => {
         const titleInput = document.createElement("input");
         titleInput.type = "text";
@@ -128,6 +129,7 @@ async function loadBooks() {
 
         const saveButton = document.createElement("button");
         saveButton.innerHTML = '<i class="fa-regular fa-pen-to-square"></i>';
+        editButton.setAttribute("aria-label", "Save book details");
         saveButton.onclick = async () => {
           const newTitle = titleInput.value;
           const newAuthor = authorInput.value;
@@ -152,6 +154,7 @@ async function loadBooks() {
 
         const cancelButton = document.createElement("button");
         cancelButton.innerHTML = '<i class="fa-solid fa-ban"></i>';
+        editButton.setAttribute("aria-label", "Cancel book details");
         cancelButton.onclick = () => {
           loadBooks();
         };
