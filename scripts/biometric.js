@@ -1,7 +1,7 @@
-import { db } from "../firebase/firebaseConfig.js";
+import { db, auth, signInAnonymously } from "../firebase/firebaseConfig.js";
 import {
-  setDoc,
   doc,
+  setDoc,
   getDoc,
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
@@ -9,109 +9,104 @@ document.addEventListener("DOMContentLoaded", () => {
   const registerButton = document.getElementById("register-button");
   const loginButton = document.getElementById("login-button");
 
-  if (registerButton) {
-    registerButton.addEventListener("click", async () => {
-      if (!window.PublicKeyCredential) {
-        alert("Biometric authentication is not supported on this browser.");
-        return;
-      }
-
-      const challenge = new Uint8Array(32);
-      window.crypto.getRandomValues(challenge);
-
-      const userId = new Uint8Array(16);
-      window.crypto.getRandomValues(userId);
-
-      const publicKeyCredentialCreationOptions = {
-        challenge: challenge,
-        rp: { name: "Book Log App" },
-        user: {
-          id: userId,
-          name: "user@example.com",
-          displayName: "User Example",
-        },
-        pubKeyCredParams: [
-          { type: "public-key", alg: -7 },
-          { type: "public-key", alg: -257 },
-        ],
-        timeout: 60000,
-        attestation: "none",
-      };
-
-      try {
-        const credential = await navigator.credentials.create({
-          publicKey: publicKeyCredentialCreationOptions,
-        });
-
-        console.log("Credential created:", credential);
-
-        const userCredentialRef = doc(
-          db,
-          "biometricCredentials",
-          userId.toString()
-        );
-        await setDoc(userCredentialRef, {
-          credentialId: credential.id,
-          userId: userId.toString(),
-          createdAt: new Date(),
-        });
-
-        alert("Biometric registration successful!");
-      } catch (err) {
-        console.error("Error during biometric registration:", err);
-        alert("Biometric registration failed.");
-      }
-    });
+  if (!window.PublicKeyCredential) {
+    alert(
+      "Your browser does not support WebAuthn. Please update your browser."
+    );
+    return;
   }
 
-  if (loginButton) {
-    loginButton.addEventListener("click", async () => {
-      if (!window.PublicKeyCredential) {
-        alert("Biometric authentication is not supported on this browser.");
-        return;
-      }
-
+  registerButton.addEventListener("click", async () => {
+    try {
       const challenge = new Uint8Array(32);
       window.crypto.getRandomValues(challenge);
 
-      const publicKeyCredentialRequestOptions = {
-        challenge: challenge,
-        timeout: 60000,
-        allowCredentials: [
-          {
-            type: "public-key",
+      const credentials = await navigator.credentials.create({
+        publicKey: {
+          challenge,
+          rp: { name: "Book Log App" },
+          user: {
             id: new Uint8Array(16),
+            name: "user@example.com",
+            displayName: "User",
           },
-        ],
-        userVerification: "preferred",
-      };
+          pubKeyCredParams: [{ alg: -7, type: "public-key" }],
+          authenticatorSelection: { authenticatorAttachment: "platform" },
+          timeout: 60000,
+        },
+      });
 
-      try {
-        const credential = await navigator.credentials.get({
-          publicKey: publicKeyCredentialRequestOptions,
-        });
+      localStorage.setItem("biometricCredential", JSON.stringify(credentials));
+      alert("Biometric registration successful!");
+    } catch (error) {
+      console.error("Biometric registration failed:", error);
+      alert("Failed to register biometrics.");
+    }
+  });
 
-        console.log("Credential retrieved:", credential);
+  loginButton.addEventListener("click", async () => {
+    try {
+      const challenge = new Uint8Array(32);
+      window.crypto.getRandomValues(challenge);
 
-        const userCredentialRef = doc(
-          db,
-          "biometricCredentials",
-          credential.id
-        );
-        const docSnap = await getDoc(userCredentialRef);
+      const credentials = await navigator.credentials.get({
+        publicKey: {
+          challenge,
+          allowCredentials: [],
+          timeout: 60000,
+        },
+      });
 
-        if (docSnap.exists()) {
-          const userData = docSnap.data();
-          console.log("User data:", userData);
-          alert("User authenticated successfully!");
-        } else {
-          console.log("No matching credentials found.");
-          alert("Authentication failed.");
-        }
-      } catch (err) {
-        console.error("Error during biometric login:", err);
-        alert("Biometric login failed.");
+      if (credentials) {
+        sessionStorage.setItem("authenticated", "true");
+        alert("Login successful!");
+        document.getElementById("main-content").style.display = "block";
+
+        signInAnonymously(auth)
+          .then(() => {
+            const user = auth.currentUser;
+            const userRef = doc(db, "users", user.uid);
+
+            getDoc(userRef)
+              .then((docSnapshot) => {
+                if (!docSnapshot.exists()) {
+                  setDoc(userRef, {
+                    name: "User",
+                    email: "user@example.com",
+                    registeredAt: new Date(),
+                    preferences: { theme: "dark", notifications: true },
+                  })
+                    .then(() => {
+                      console.log("New user data created in Firestore.");
+                    })
+                    .catch((error) => {
+                      console.error(
+                        "Error creating new user in Firestore:",
+                        error
+                      );
+                    });
+                } else {
+                  console.log("User already exists in Firestore.");
+                }
+              })
+              .catch((error) => {
+                console.error("Error checking user data in Firestore:", error);
+              });
+          })
+          .catch((error) => {
+            console.error("Firebase authentication failed:", error);
+          });
+      } else {
+        throw new Error("Biometric authentication failed");
       }
-    });
+    } catch (error) {
+      console.error("Biometric login failed:", error);
+      alert(`Failed to authenticate with biometrics: ${error.message}`);
+    }
+  });
+
+  if (!sessionStorage.getItem("authenticated")) {
+    document.getElementById("main-content").style.display = "none";
+    alert("Please log in using biometrics.");
   }
 });

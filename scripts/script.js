@@ -1,4 +1,4 @@
-import { db } from "../firebase/firebaseConfig.js";
+import { db, auth } from "../firebase/firebaseConfig.js";
 import {
   collection,
   addDoc,
@@ -8,6 +8,7 @@ import {
   doc,
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
+// DOM Elements
 const bookForm = document.getElementById("book-form");
 const bookTableBody = document
   .getElementById("book-list")
@@ -23,15 +24,24 @@ bookForm.addEventListener("submit", async (e) => {
   const author = document.getElementById("author").value;
   const genre = document.getElementById("genre").value;
   const rating = document.getElementById("rating").value;
-  const status = document.getElementById("status").value; // Get status value
+  const status = document.getElementById("status").value;
+
+  if (!auth.currentUser) {
+    alert("Please login first!");
+    return;
+  }
 
   try {
-    await addDoc(collection(db, "books"), {
+    const userId = auth.currentUser.uid; // Get the logged-in user's ID
+    const userBooksRef = collection(db, "users", userId, "books");
+
+    await addDoc(userBooksRef, {
       title,
       author,
       genre,
       rating,
       status,
+      userId: auth.currentUser.uid,
     });
     alert("Book added successfully!");
     bookForm.reset();
@@ -41,13 +51,32 @@ bookForm.addEventListener("submit", async (e) => {
   }
 });
 
+// Wait for Firebase Authentication to be initialized and then load books
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    console.log("User is logged in:", user);
+    loadBooks(); // Load books when the user is authenticated
+  } else {
+    console.log("User is not logged in");
+    alert("Please log in first.");
+  }
+});
+
 async function loadBooks() {
+  if (!auth.currentUser) {
+    alert("Please login first!");
+    return;
+  }
+
   const selectedGenre = genreFilter.value;
   bookTableBody.innerHTML = "";
   const genresSet = new Set();
 
   try {
-    const querySnapshot = await getDocs(collection(db, "books"));
+    const userId = auth.currentUser.uid; // Get the logged-in user's ID
+    const userBooksRef = collection(db, "users", userId, "books");
+
+    const querySnapshot = await getDocs(userBooksRef);
     querySnapshot.forEach((docSnapshot) => {
       const book = docSnapshot.data();
       genresSet.add(book.genre);
@@ -129,7 +158,7 @@ async function loadBooks() {
 
         const saveButton = document.createElement("button");
         saveButton.innerHTML = '<i class="fa-regular fa-pen-to-square"></i>';
-        editButton.setAttribute("aria-label", "Save book details");
+        saveButton.setAttribute("aria-label", "Save book details");
         saveButton.onclick = async () => {
           const newTitle = titleInput.value;
           const newAuthor = authorInput.value;
@@ -154,7 +183,7 @@ async function loadBooks() {
 
         const cancelButton = document.createElement("button");
         cancelButton.innerHTML = '<i class="fa-solid fa-ban"></i>';
-        editButton.setAttribute("aria-label", "Cancel book details");
+        cancelButton.setAttribute("aria-label", "Cancel book details");
         cancelButton.onclick = () => {
           loadBooks();
         };
