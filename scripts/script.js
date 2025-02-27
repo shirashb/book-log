@@ -71,7 +71,7 @@ async function loadBooks() {
   const genresSet = new Set();
 
   try {
-    const userId = auth.currentUser.uid; // Get the logged-in user's ID
+    const userId = auth.currentUser.uid;
     const userBooksRef = collection(db, "users", userId, "books");
 
     const querySnapshot = await getDocs(userBooksRef);
@@ -189,7 +189,6 @@ async function loadBooks() {
         actionsCell.appendChild(saveButton);
         actionsCell.appendChild(cancelButton);
 
-        // Add keydown listener for "Enter" key to trigger saveButton
         titleInput.addEventListener("keydown", handleEnterKey);
         authorInput.addEventListener("keydown", handleEnterKey);
         genreInput.addEventListener("keydown", handleEnterKey);
