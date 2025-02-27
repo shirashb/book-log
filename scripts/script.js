@@ -8,6 +8,7 @@ import {
   doc,
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
+// DOM Elements
 const bookForm = document.getElementById("book-form");
 const bookTableBody = document
   .getElementById("book-list")
@@ -31,7 +32,7 @@ bookForm.addEventListener("submit", async (e) => {
   }
 
   try {
-    const userId = auth.currentUser.uid;
+    const userId = auth.currentUser.uid; // Get the logged-in user's ID
     const userBooksRef = collection(db, "users", userId, "books");
 
     await addDoc(userBooksRef, {
@@ -50,6 +51,17 @@ bookForm.addEventListener("submit", async (e) => {
   }
 });
 
+// Wait for Firebase Authentication to be initialized and then load books
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    console.log("User is logged in:", user);
+    loadBooks(); // Load books when the user is authenticated
+  } else {
+    console.log("User is not logged in");
+    alert("Please log in first.");
+  }
+});
+
 async function loadBooks() {
   if (!auth.currentUser) {
     alert("Please login first!");
@@ -61,7 +73,7 @@ async function loadBooks() {
   const genresSet = new Set();
 
   try {
-    const userId = auth.currentUser.uid;
+    const userId = auth.currentUser.uid; // Get the logged-in user's ID
     const userBooksRef = collection(db, "users", userId, "books");
 
     const querySnapshot = await getDocs(userBooksRef);
@@ -179,6 +191,7 @@ async function loadBooks() {
         actionsCell.appendChild(saveButton);
         actionsCell.appendChild(cancelButton);
 
+        // Add keydown listener for "Enter" key to trigger saveButton
         titleInput.addEventListener("keydown", handleEnterKey);
         authorInput.addEventListener("keydown", handleEnterKey);
         genreInput.addEventListener("keydown", handleEnterKey);
