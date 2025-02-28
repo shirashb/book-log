@@ -36,8 +36,14 @@ document.addEventListener("DOMContentLoaded", () => {
         },
       });
 
-      localStorage.setItem("biometricCredential", JSON.stringify(credentials));
-      alert("Biometric registration successful!");
+      if (credentials) {
+        localStorage.setItem(
+          "credentialId",
+          btoa(String.fromCharCode(...new Uint8Array(credentials.rawId)))
+        );
+
+        alert("Biometric registration successful!");
+      }
     } catch (error) {
       console.error("Biometric registration failed:", error);
       alert("Failed to register biometrics.");
@@ -49,11 +55,26 @@ document.addEventListener("DOMContentLoaded", () => {
       const challenge = new Uint8Array(32);
       window.crypto.getRandomValues(challenge);
 
+      const storedCredentialId = localStorage.getItem("credentialId");
+
       const credentials = await navigator.credentials.get({
         publicKey: {
           challenge,
-          allowCredentials: [],
+          allowCredentials: storedCredentialId
+            ? [
+                {
+                  id: Uint8Array.from(atob(storedCredentialId), (c) =>
+                    c.charCodeAt(0)
+                  ),
+                  type: "public-key",
+                },
+              ]
+            : [],
           timeout: 60000,
+          userVerification: "required",
+          authenticatorSelection: {
+            authenticatorAttachment: "platform",
+          },
         },
       });
 
@@ -80,10 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
                       console.log("New user data created in Firestore.");
                     })
                     .catch((error) => {
-                      console.error(
-                        "Error creating new user in Firestore:",
-                        error
-                      );
+                      console.error("Error creating user in Firestore:", error);
                     });
                 } else {
                   console.log("User already exists in Firestore.");
